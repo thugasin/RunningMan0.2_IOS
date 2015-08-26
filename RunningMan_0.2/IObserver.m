@@ -16,7 +16,7 @@
     return [super init];
 }
 
--(void) ONMessageCome:(NSString*) MsgBody
+-(void) ONMessageCome:(MessageType)msgType MsgBody:(NSString*) MsgBody
 {
     return;
 }

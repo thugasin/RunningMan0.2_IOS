@@ -11,10 +11,11 @@
 
 
 #endif
+#import "NetworkProtocal.h"
 
 @protocol IObserver
 
--(void) ONMessageCome:(NSString*) MsgBody;
+-(void) ONMessageCome:(MessageType)msgType MsgBody:(NSString*) MsgBody;
 
 @end
 

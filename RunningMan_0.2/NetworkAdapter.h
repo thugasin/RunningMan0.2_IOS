@@ -22,6 +22,16 @@
 
 @end
 
+@interface SocketMessage:NSObject
+{
+    MessageType Type;
+    NSString* Body;
+}
+
++(id)InitObject:(MessageType)msgType MessageBody:(NSString*)msgBody;
+-(id)InternalInit:(MessageType)msgType MessageBody:(NSString*)msgBody;
+@end
+
 
 @interface NetworkAdapter : NSObject
 {
@@ -36,6 +46,6 @@
 - (void) sendData:(NSString*)Msg;
 -(void) SubscribeMessage:(MessageType)MsgType Instance:(Observer*)Ins;
 -(void) PublishMessage:(MessageType)MsgType MsgBody:(NSString*)MsgBody;
-
+-(SocketMessage*) ParseMessage:(NSString*)Message;
 
 @end

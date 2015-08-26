@@ -30,6 +30,23 @@
 
 @end
 
+@implementation SocketMessage
+
++(id)InitObject:(MessageType)msgType MessageBody:(NSString*)msgBody
+{
+    return [[self alloc] InternalInit:msgType MessageBody:msgBody];
+}
+-(id)InternalInit:(MessageType)msgType MessageBody:(NSString*)msgBody
+{
+    if (self == [super init]) {
+        self->Type = msgType;
+        self->Body = msgBody;
+    }
+    
+    return self;
+}
+@end
+
 static NetworkAdapter *sharedObj= nil;
 @implementation NetworkAdapter
 
@@ -90,8 +107,9 @@ static NetworkAdapter *sharedObj= nil;
 -(void) onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
     NSString* aStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    [self PublishMessage:LOGIN_RESULT MsgBody:aStr];
     
+    
+    [self PublishMessage:LOGIN_RESULT MsgBody:aStr];
 }
 
 
@@ -114,8 +132,13 @@ static NetworkAdapter *sharedObj= nil;
             continue;
         }
         
-        [sub.SubscriberInstance ONMessageCome:MsgBody];
+        [sub.SubscriberInstance ONMessageCome:(MessageType)MsgType MsgBody:MsgBody];
     }
+}
+
+-(SocketMessage*) ParseMessage:(NSString*)Message
+{
+    
 }
 
 //
