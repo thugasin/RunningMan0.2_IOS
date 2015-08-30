@@ -16,9 +16,31 @@
     return [super init];
 }
 
--(void) ONMessageCome:(MessageType)msgType MsgBody:(NSString*) MsgBody
+-(void) ONMessageCome:(SocketMessage*)socketMsg
 {
     return;
 }
 
+@end
+
+@implementation SocketMessage
+
+@synthesize argumentNumber;
+@synthesize argumentList;
+@synthesize Type;
+
++(id)InitObject:(MessageType)msgType ArgumentNumber:(int)argNum ArgumentList:(NSMutableArray*)argList
+{
+    return [[self alloc] InternalInit:msgType ArgumentNumber:argNum ArgumentList:argList];
+}
+-(id)InternalInit:(MessageType)msgType ArgumentNumber:(int)argNum ArgumentList:(NSMutableArray*)argList
+{
+    if (self == [super init]) {
+        self->Type = msgType;
+        self->argumentNumber = argNum;
+        self->argumentList = argList;
+    }
+    
+    return self;
+}
 @end

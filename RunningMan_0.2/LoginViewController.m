@@ -69,9 +69,11 @@
     }
 }
 
--(void) ONMessageCome:(NSString *)MsgBody
+-(void) ONMessageCome:(SocketMessage*)socketMsg
 {
-    NSLog(@"hahaha");
+    if ([socketMsg.argumentList[0] isEqualToString:@"1"]) {
+        ;
+    }
 }
 
 

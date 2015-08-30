@@ -13,9 +13,21 @@
 #endif
 #import "NetworkProtocal.h"
 
+@interface SocketMessage:NSObject
+{
+}
+
+@property(nonatomic) MessageType Type;
+@property(nonatomic) int argumentNumber;
+@property(nonatomic, strong) NSMutableArray* argumentList;
+
++(id)InitObject:(MessageType)msgType ArgumentNumber:(int)argNum ArgumentList:(NSMutableArray*)argList;
+-(id)InternalInit:(MessageType)msgType ArgumentNumber:(int)argNum ArgumentList:(NSMutableArray*)argList;
+@end
+
 @protocol IObserver
 
--(void) ONMessageCome:(MessageType)msgType MsgBody:(NSString*) MsgBody;
+-(void) ONMessageCome:(SocketMessage*)socketMsg;
 
 @end
 
@@ -24,4 +36,6 @@
 +(id) initObject;
 
 @end
+
+
 

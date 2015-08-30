@@ -22,15 +22,7 @@
 
 @end
 
-@interface SocketMessage:NSObject
-{
-    MessageType Type;
-    NSString* Body;
-}
 
-+(id)InitObject:(MessageType)msgType MessageBody:(NSString*)msgBody;
--(id)InternalInit:(MessageType)msgType MessageBody:(NSString*)msgBody;
-@end
 
 
 @interface NetworkAdapter : NSObject

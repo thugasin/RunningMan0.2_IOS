@@ -30,22 +30,6 @@
 
 @end
 
-@implementation SocketMessage
-
-+(id)InitObject:(MessageType)msgType MessageBody:(NSString*)msgBody
-{
-    return [[self alloc] InternalInit:msgType MessageBody:msgBody];
-}
--(id)InternalInit:(MessageType)msgType MessageBody:(NSString*)msgBody
-{
-    if (self == [super init]) {
-        self->Type = msgType;
-        self->Body = msgBody;
-    }
-    
-    return self;
-}
-@end
 
 static NetworkAdapter *sharedObj= nil;
 @implementation NetworkAdapter
@@ -109,7 +93,7 @@ static NetworkAdapter *sharedObj= nil;
     NSString* aStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
     
-    [self PublishMessage:LOGIN_RESULT MsgBody:aStr];
+    [self PublishMessage:[self ParseMessage:aStr]];
 }
 
 
@@ -124,21 +108,44 @@ static NetworkAdapter *sharedObj= nil;
     else
         [m_MsgSubscriber addObject:sub];
 }
--(void) PublishMessage:(MessageType)MsgType MsgBody:(NSString*)MsgBody
+-(void) PublishMessage:(SocketMessage*)socketMsg
 {
     for (SrvMsgSubscriber* sub in m_MsgSubscriber)
     {
-        if (sub.MsgType != MsgType) {
+        if (sub.MsgType != socketMsg.Type) {
             continue;
         }
         
-        [sub.SubscriberInstance ONMessageCome:(MessageType)MsgType MsgBody:MsgBody];
+        [sub.SubscriberInstance ONMessageCome:(SocketMessage*)socketMsg];
     }
 }
 
 -(SocketMessage*) ParseMessage:(NSString*)Message
 {
+    NSCharacterSet* CharacterSet = [NSCharacterSet characterSetWithCharactersInString:@" \r\n"];
+    NSArray *MessageArray =[Message componentsSeparatedByCharactersInSet:CharacterSet];
     
+    MessageType msgType = (MessageType)[MessageArray[0] integerValue];
+    int argNumber = (int)[MessageArray[1] integerValue];
+    
+    NSMutableArray *argList = [NSMutableArray arrayWithCapacity:argNumber];
+    
+    for (int i=2; i<MessageArray.count ; i++) {
+        if ([MessageArray[i]  isEqual: @""] ) {
+            continue;
+        }
+        if (argList.count == argNumber) {
+            {
+                NSLog(@"wrong message from server!!");
+                return nil;
+            }
+        }
+        [argList addObject:MessageArray[i]];
+    }
+    
+    SocketMessage* socketMsg = [SocketMessage InitObject:msgType ArgumentNumber:argNumber ArgumentList:argList];
+    
+    return socketMsg;
 }
 
 //
